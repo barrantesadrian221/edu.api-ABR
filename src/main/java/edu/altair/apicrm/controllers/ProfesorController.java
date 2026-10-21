@@ -1,7 +1,5 @@
 package edu.altair.apicrm.controllers;
 
-
-
 import edu.altair.apicrm.dtos.ProfesorResponseDto;
 import edu.altair.apicrm.services.ProfesorService;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +16,13 @@ public class ProfesorController {
     // Se inyecta la interfaz ProfesorService
     public ProfesorController(ProfesorService profesorService) {
         this.profesorService = profesorService;
+    }
+
+    // GET /api/profesores -> Obtener todos
+    @GetMapping
+    public ResponseEntity<List<ProfesorResponseDto>> obtenerTodos() {
+        List<ProfesorResponseDto> profesores = profesorService.obtenerTodos();
+        return ResponseEntity.ok(profesores); // HTTP 200 OK
     }
 
     // GET /api/profesores/modulo/{nombreModulo}

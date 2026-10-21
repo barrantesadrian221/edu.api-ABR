@@ -15,7 +15,6 @@ public class ProfesorServiceImpl implements ProfesorService {
 
     private final ProfesorRepository profesorRepository;
 
-    // Solo necesitamos el repositorio
     public ProfesorServiceImpl(ProfesorRepository profesorRepository) {
         this.profesorRepository = profesorRepository;
     }
@@ -35,13 +34,25 @@ public class ProfesorServiceImpl implements ProfesorService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProfesorResponseDto> obtenerTodos() {
-        return List.of();
+        return profesorRepository.findAll().stream()
+                .map(this::mapToResponseDto)
+                .toList();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProfesorResponseDto> obtenerPorModulo(String nombreModulo) {
-        return List.of();
+        List<Profesor> profesores = profesorRepository.findByModulo(nombreModulo);
+
+        if (profesores.isEmpty()) {
+            throw new ModuloNotFoundException("No se encontraron profesores para el módulo: " + nombreModulo);
+        }
+
+        return profesores.stream()
+                .map(this::mapToResponseDto)
+                .toList();
     }
 
     private ProfesorResponseDto mapToResponseDto(Profesor profesor) {
@@ -53,5 +64,3 @@ public class ProfesorServiceImpl implements ProfesorService {
         );
     }
 }
-
-
