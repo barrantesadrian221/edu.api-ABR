@@ -1,8 +1,8 @@
 package edu.altair.apicrm.dtos;
 
 public record ProfesorResponseDto(
-        Long idProfesor,
+        String dni,
         String nombre,
-        String apellidos,
-        String modulo
+        String departamentoCodigo,
+        String departamentoNombre
 ) {}

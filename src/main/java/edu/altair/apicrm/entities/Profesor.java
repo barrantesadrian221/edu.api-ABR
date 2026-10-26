@@ -1,64 +1,46 @@
 package edu.altair.apicrm.entities;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "profesores", schema = "crm")
 public class Profesor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_profesor")
-    private Long idProfesor;
+    @Column(name = "dni", length = 9)
+    private String dni;
 
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
 
-    @Column(name = "apellidos", nullable = false, length = 150)
-    private String apellidos;
+    // Pertenece obligatoriamente a un único departamento (N:1)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "codigo_departamento", foreignKey = @ForeignKey(name = "fk_profesor_departamento"))
+    private Departamento departamento;
 
-    @Column(name = "modulo", nullable = false, length = 100)
-    private String modulo;
+    @OneToMany(mappedBy = "profesor", fetch = FetchType.LAZY)
+    private List<Asignatura> asignaturas = new ArrayList<>();
 
-    public Profesor() {
-    }
+    public Profesor() {}
 
-    public Profesor(Long idProfesor, String nombre, String apellidos, String modulo) {
-        this.idProfesor = idProfesor;
+    public Profesor(String dni, String nombre, Departamento departamento) {
+        this.dni = dni;
         this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.modulo = modulo;
+        this.departamento = departamento;
     }
 
-    public Long getIdProfesor() {
-        return idProfesor;
-    }
+    // Getters y Setters
+    public String getDni() { return dni; }
+    public void setDni(String dni) { this.dni = dni; }
 
-    public void setIdProfesor(Long idProfesor) {
-        this.idProfesor = idProfesor;
-    }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public Departamento getDepartamento() { return departamento; }
+    public void setDepartamento(Departamento departamento) { this.departamento = departamento; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
-    }
-
-    public String getModulo() {
-        return modulo;
-    }
-
-    public void setModulo(String modulo) {
-        this.modulo = modulo;
-    }
+    public List<Asignatura> getAsignaturas() { return asignaturas; }
+    public void setAsignaturas(List<Asignatura> asignaturas) { this.asignaturas = asignaturas; }
 }
